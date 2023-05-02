@@ -1,9 +1,7 @@
-import Container from '@mui/material/Container'
-import Stack from '@mui/joy/Stack';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import AddIcon from '@mui/icons-material/Add';
 import { Link } from 'react-router-dom'
-import { Box, Typography, Button } from '@mui/material';
+import { Box, Typography, Button, Stack, Container } from '@mui/material';
 
 const DetailProduct = () => {
 
