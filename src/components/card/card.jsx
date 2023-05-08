@@ -1,5 +1,6 @@
 //react Imports
 import { useRef } from "react";
+import { Link } from "react-router-dom";
 //mui Components
 import Card from "@mui/material/Card";
 import CardMedia from '@mui/material/CardMedia';
@@ -114,9 +115,11 @@ const userData = useSelector((state) => state.currentUser.userCredentials)
             <HalfRatingPreview rValue={rating}/>
           </Box>
           <CardActions sx={{padding:0}}>
-            <Button variant="contained" color="primary">
-              Details
-            </Button>
+            <Link to={`/detail/${id}`}>
+              <Button variant="contained" color="primary">
+                Details
+              </Button>
+            </Link>
             <IconButton>
               <FavoriteIcon color="warning" />
             </IconButton>

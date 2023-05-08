@@ -5,7 +5,7 @@ import { Container, Stack, Typography, Box } from "@mui/material";
 
 
 const Error = () => {
-    return (<Box bgcolor="#47dbd6" sx={{ height: '100%' }}>
+    return (<Box bgcolor="#47dbd6" sx={{ height: '100vh' }}>
 
         <Container fixed>
             <Stack flexDirection={"column"} alignItems={'center'} spacing={2} justifyContent="center" >

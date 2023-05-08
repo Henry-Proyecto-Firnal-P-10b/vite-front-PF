@@ -13,6 +13,10 @@ a{
   color:#232323
 }
 
+img{
+  max-width: 100%;
+}
+
 body {
   margin: 0;
 	padding: 0;
