@@ -1,8 +1,6 @@
 import React from 'react'
 import { useState, useEffect } from 'react';
-import { Box, Button, Typography } from '@mui/material'
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
-import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
+import { Box, Typography } from '@mui/material'
 import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 
 const Slider = () => {
@@ -21,14 +19,14 @@ return (
   <>
   <Box   
    sx={{
-   width: "100%",
+   width: "100vw",
    height:{ xs:130, sm:110,},
    justifyContent:"center",
    alignItems:"center",
    pt:"1.5%",
    //**CAMBIE COLOR BACKGROUND BANNER */
    //background: "#0d47a1",
-   background:"#1976d2",
+   background:"#1e88e5",
   
   }}
   >

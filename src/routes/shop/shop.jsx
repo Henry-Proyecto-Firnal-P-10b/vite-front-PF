@@ -1,40 +1,18 @@
-import Container from '@mui/material/Container'
-import CardInf from "../../components/card/card"
-import { Grid } from '@mui/material'
-import { PaginationComponent } from '../../components/pagination/pagination'
-import { useSelector } from 'react-redux'
-import FiltersComponent from '../../components/filtersComponent/filtersComponent'
+import { Routes, Route } from 'react-router-dom'
+
+import Products from '../../components/products/products'
+import Cart from '../cart/cart'
+import Checkout from '../checkout/checkout'
+
 const Shop = () => {
-
-  const Products =  useSelector((state) =>state.productPag.products)
-
-
    return (
-    <Container maxWidth="xl" sx={{minHeight:"100vh", pt:"2rem"}}>   
-        <Grid container justifyContent={"center"} >        
-        {
-         Products.length?Products.map((products, i) => (
-          <CardInf
-            key={`${products.id}+${i}`}
-            id = {products.id}
-            imageUrl={products.imageUrl[0]}
-            categories={products.categories}
-            title={products.name}
-            price={products.price}
-            sale={products.sale}
-            rating={products.rating}
-            reviews={products.reviews}
-            stock={products.stock}            
-          />
-        )):(null) 
-      } 
-      </Grid>
-      <Grid  > 
-      <PaginationComponent/>  
-      </Grid>
-     
-    </Container>
+    <Routes>
+      <Route index element={<Products />} />
+      <Route path='cart' element = {<Cart />} />
+      <Route path='checkout' element = {<Checkout />} />
+    </Routes>
   )
 }
 
 export default Shop
+

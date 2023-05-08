@@ -3,7 +3,7 @@ import styles from "./card-item.module.css";
 
 const CardItem = ({cardItem}) => {
   const {title,imageUrl, price ,quantity} = cardItem;  
-    
+  
   return (
     <div className={styles.cartItemContainer}>
       <img src={imageUrl} alt={title} />

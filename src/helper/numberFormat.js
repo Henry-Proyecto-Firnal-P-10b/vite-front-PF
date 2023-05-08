@@ -1,7 +1,7 @@
 export const numberFormat = (number)=> {
-  const formatter = new Intl.NumberFormat('es-CO', {
+  const formatter = new Intl.NumberFormat('en-US', {
     style: 'currency',
-    currency: 'COP',
+    currency: 'USD',
     minimumFractionDigits: 0
   });
   

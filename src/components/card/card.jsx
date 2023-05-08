@@ -14,8 +14,9 @@ import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 //Helpers
 import { numberFormat } from "../../helper/numberFormat";
 //redux 
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addItemToCart } from "../../features/cartSlice/cartSlice";
+
 
 const CardInf = (
   {
@@ -27,7 +28,7 @@ const CardInf = (
     id,    
   }
 ) => {
-
+const userData = useSelector((state) => state.currentUser.userCredentials)
   const onSale = useRef(false);
   const dispatch = useDispatch();
 
@@ -42,13 +43,17 @@ const CardInf = (
   
 
   const handleClickCartIcon = () => {
+    
     const product = {
       id,
       title,
       imageUrl,
       price      
     }   
-    dispatch(addItemToCart(product));
+ dispatch(addItemToCart(product));
+   
+
+   
   }
 
   return (

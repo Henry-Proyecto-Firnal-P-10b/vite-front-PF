@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 
 const CartIcon = () => {
 
-  const cartItems = useSelector(state => state.cart.cartItems);
+  const cartItems = useSelector(state => state.persistedReducer.carState.cartItems);
 
   const newCartCount = cartItems.reduce((total, cartItem)=> total + cartItem.quantity , 0)
   

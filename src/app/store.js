@@ -1,9 +1,12 @@
 //Redux 
 import { configureStore } from '@reduxjs/toolkit'
-
+//persist
+import storage from 'redux-persist/lib/storage'
+import { persistReducer } from 'redux-persist'
+import { combineReducers } from '@reduxjs/toolkit'
 import thunk from 'redux-thunk'
 //Redux Slice
-import carritoSlice from '../features/carrito/carritoSlice'
+import cartSlice from '../features/cartSlice/cartSlice'
 import productSlice  from '../features/products/productSlice'
 import favoriteSlice from '../features/favorite/favoriteSlice'
 import userDataSlice from '../features/userData/userDataSlice'
@@ -15,13 +18,27 @@ import cartReducer from '../features/cartSlice/cartSlice'
 
 
 
+const persistConfig = {
+  key : 'localCar',
+  storage,
+  whitelist: ['carState']
+}
+const localCarReducer = combineReducers({
+  carState : cartSlice
+})
+const persistedReducer = persistReducer(
+ persistConfig, localCarReducer
+)
+
+
 export const store = configureStore({
   reducer: {
     currentUser : credentialsReducer,
     userData : userDataSlice,
     products: productSlice,
     productsId: productsIdSlice,
-    carrito: carritoSlice,
+ //   carrito: carritoSlice,
+    persistedReducer,
     favorite: favoriteSlice,
     categories: categoriesSlice,
     productPag : productPag,

@@ -22,29 +22,30 @@ const HeroContainer = styled(Paper)(({ theme }) => ({
   backgroundImage: `url(${bebe1})`,
   backgroundSize: 'cover',
   backgroundPosition: 'center',
-  width: '100%',
-  //padding: theme.spacing(6),
-  padding: theme.spacing(4),  
-  minHeight: '100vh',
+  width: '100vw',  
+  padding: theme.spacing(6),
+ 
+  //padding: theme.spacing(4),    
   [theme.breakpoints.up('sm')]: {
-    //padding: theme.spacing(6),
-    padding: theme.spacing(4),
+    padding: theme.spacing(6),
+    //padding: theme.spacing(4),
+    minHeight: "100vh",
   },
 }));
 
 const HeroTitle = styled('h1')(({ theme }) => ({
   //color: 'white',
   color: 'black',
-  //marginTop: theme.spacing(4),
-  //marginBottom: theme.spacing(2),
-  fontSize: theme.typography.pxToRem(50),
+  marginTop: "1px",
+  marginRight:"1px",
+ // marginBottom: theme.spacing(2),
+  fontSize: theme.typography.pxToRem(20),
   textAlign: 'center',
-  fontWeight: 'bold',
-  
+  fontWeight: 'bold',  
   maxWidth: '700px',
   [theme.breakpoints.up('sm')]: {
     fontSize: theme.typography.pxToRem(70),
-    //marginTop: theme.spacing(10),
+    marginTop: theme.spacing(2),
   },
 }));
 
@@ -53,7 +54,7 @@ const HeroSubtitle = styled('h2')(({ theme }) => ({
   color: 'black',
   //marginTop: theme.spacing(4),
   textAlign: 'center',
-  fontSize: theme.typography.pxToRem(16),
+  fontSize: theme.typography.pxToRem(14),
   fontWeight: 'normal',
   maxWidth: '700px',
   [theme.breakpoints.up('sm')]: {
@@ -106,19 +107,18 @@ export default function Hero() {
 
   return (
     <>
-    <HeroContainer elevation={8} >
-    <Box sx={{ background:"rgba(255,255,255,0.2)",width:"60%", pt:1, pb:1, borderRadius:5,pointer:"cursor",'&:hover':{
-      color:"black",
-    }}}>
+    <HeroContainer elevation={8}>
+    <Box sx={{width:"100%", pb:1, borderRadius:5}}>
      <HeroTitle >Mom Home & Baby</HeroTitle>     
       <HeroSubtitle>
         Asesoramos a mamitas primerizas en la elección de los mejores productos para su embarazo, lactancia y sus bebés. <br />
         ¡Ahorrándoles horas de investigación!
       </HeroSubtitle>
       <Button  sx={{
-        ml:{sm:"25%"},
+        justifyContent:"center",
+        ml:{xs:5, sm:15, md:0, lg:0, xl:0},
         mt:{sm:"2%"},
-        width:{xs:"100%", sm:"50%"},
+        width:{xs:"80%", sm:"60%"},
        // background:"#0d47a1",
        background:"#1976d2",
       '&:hover':{
@@ -133,11 +133,13 @@ export default function Hero() {
       </Button>
       </Box>      
     </HeroContainer>
-    <Box elevetion={8} alignContent={"center"} justifyContent={"center"} textAlign={"center"}>
-    <Typography textAlign={"center"} mt={3} variant='h5'sx={{fontSize:"8"}}>
-    <span>PRODUCTOS IMPERDIBLES</span>
+    <Box elevetion={8} alignContent={"center"} justifyContent={"center"} textAlign={"center"}
+    
+    sx={{width:{xs:"80%"}}}>
+    <Typography textAlign={"center"} ml={18} mt={3} variant='h5'sx={{fontSize:"8"}}>
+        PRODUCTOS IMPERDIBLES
     </Typography> 
-    <Grid container justifyContent={"center"}  > 
+    <Grid container justifyContent={"center"} ml={{xs:5, sm:10}} > 
     {
     sortedProductsByRating.length?sortedProductsByRating.map((sortedProductsByRating, i) => (
     <CardInf
@@ -151,14 +153,15 @@ export default function Hero() {
     />
     )):(null) 
     } 
-    </Grid>
-    <Paper >
-    <Slider/>
+    </Grid>   
+    <Paper> 
+    <Slider/>    
     </Paper>
-    <Typography textAlign={"center"} mt={3}  variant='h5'>
-    NUESTROS RECOMENDADOS
+    <Typography textAlign={"center"} mt={3} ml={18} variant='h5'>
+        NUESTROS RECOMENDADOS
     </Typography> 
-    <Grid container justifyContent={"center"}  > 
+    <Grid container justifyContent={"center"} ml={{xs:5, sm:10}} > 
+     
     {
     sortedProductsBySale.length?sortedProductsBySale.map((sortedProductsBySale, i) => (
     <CardInf
