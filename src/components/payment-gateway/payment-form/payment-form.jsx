@@ -14,6 +14,25 @@ const PaymentForm = () => {
   const {cartTotal, cartItems} = useSelector(state => state.persistedReducer.carState);
   const currentUser = useSelector(state => state.persistedReducer.userData.userInf)
   const uid = useSelector(state => state.currentUser.userCredentials.uid);
+  //emailJs
+  const USER_ID="service_8duinll";
+  const API_KEY= "template_g954u96";
+  const TEMPLATE_ID= "lp4j5eTKXZNYsZ4jM";
+
+  var templateParams = {
+    email: currentUser.email,
+    name: currentUser.displayName,
+  };
+  
+  const sendEmail = (e) =>{
+      e.preventDefault()
+      emailjs.send(USER_ID, API_KEY, templateParams, TEMPLATE_ID).then((result) => {
+        console.log(result.text);
+      }, (error) => {
+        console.log(error.text)
+      });
+    };
+
 
   const paymentHandler = async (e) => {
     e.preventDefault();
@@ -50,6 +69,7 @@ const PaymentForm = () => {
           await setDataUser("onlinePurchases", cartItems, uid );
         }
         updateDataUser();
+        sendEmail();
         alert("Pago exitoso gracias por su compra!");
         navigate("/");
         dispatch(clearCart());
