@@ -19,7 +19,7 @@ const DetailComponent = ({ productDetail, productId }) => {
   
 
   const [purchasedProducts, setPurchasedProducts] = useState();
-  const [bought, setBought] = useState(false);
+  const [toggleReview, setToggleReview] = useState(false);
 
   const { userData } = useSelector(state => state.persistedReducer.userData);
   const { name, price, rating, reviews, stock, categories, description, imageUrl } = productDetail;
@@ -46,7 +46,7 @@ const DetailComponent = ({ productDetail, productId }) => {
 
   useEffect(() => {
     if (!purchasedProducts) return;    
-    setBought(!!purchasedProducts.find(({id}) => id === productId )); 
+    setToggleReview(!!purchasedProducts.find(({id}) => id === productId )); 
   }, [ productId, purchasedProducts])
   const handleClickCart = () => {
     const product = {
@@ -57,6 +57,7 @@ const DetailComponent = ({ productDetail, productId }) => {
     }
     dispatch(addItemToCart(product));
   }
+
 
   return (
     <Container maxWidth="xl">
@@ -86,7 +87,7 @@ const DetailComponent = ({ productDetail, productId }) => {
       </div>
       <div className={styles.reviewsContainer}>
         {
-          bought && <PostReview userData={userData} uid={productId} />
+          toggleReview && <PostReview userData={userData} uid={productId} allReviews={reviews} />
         }
         {reviews.length !== 0
           ? reviews.map((review) => <ReviewComponent key={v4()} reviewInf={review} />)

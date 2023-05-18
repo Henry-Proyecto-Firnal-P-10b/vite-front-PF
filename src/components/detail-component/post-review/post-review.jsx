@@ -5,9 +5,12 @@ import { useState } from "react"
 import SetRatingComponent from "../../card/rating/rating"
 import { useEffect } from "react"
 import { setReview } from "../../../utils/firebase/firebaseClient"
+import Swal from "sweetalert2"
 
-const PostReview = ({userData, uid }) => {  
+const PostReview = ({userData, uid, allReviews }) => {  
   
+  const [hadReview, setHadReview] = useState(false);
+
   const [reviewValue, setReviewValue] = useState(0);
   const reviewForm = useForm({
     defaultValues:{
@@ -15,6 +18,11 @@ const PostReview = ({userData, uid }) => {
     }
   });
   const {register, handleSubmit, reset, formState: {errors, isSubmitSuccessful} } = reviewForm;
+
+  useEffect(()=> {  
+    const response = allReviews.find(review => review.user === userData.displayName)
+    setHadReview(!! response)    
+  }, [allReviews, userData.displayName])
 
   useEffect(()=>{
     if(isSubmitSuccessful)
@@ -30,7 +38,8 @@ const PostReview = ({userData, uid }) => {
       review,
       user: userData.displayName
     }
-    setReview(reviews, uid)  
+    if(!hadReview) return setReview(reviews, uid)  
+    Swal.fire('Solo puede dar 1 review por producto')
   }
 
   return (

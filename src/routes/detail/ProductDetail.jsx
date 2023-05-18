@@ -22,7 +22,6 @@ const DetailProduct = () => {
     getProductDetail(id);
   }, [id])
 
-  
 
   const getProductDetail = async (id) => {
     try {
@@ -35,9 +34,6 @@ const DetailProduct = () => {
       console.error(error);
     }
   }
-
-
-
 
   return (
     isLoading ? <Loader /> :
