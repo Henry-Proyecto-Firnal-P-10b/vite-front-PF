@@ -1,4 +1,3 @@
-
 import HeroComponent from "../../components/hero-components/hero-component/hero-component"
 import HomeCarousel from "../../components/hero-components/home-carousel/home-carousel";
 import ProductsByRaiting from "../../components/hero-components/products-by-raiting/products-by-raiting";
@@ -15,8 +14,10 @@ const Home = () => {
   useEffect(()=>{
       if(uid){
         const dataUser = async() =>{
-        const info = await getUserByid(uid)
-            dispatch(getUserData(info))
+       
+      getUserByid(uid,dat =>{
+          dispatch(getUserData(dat.data()))
+        })          
           }
           dataUser()
       }

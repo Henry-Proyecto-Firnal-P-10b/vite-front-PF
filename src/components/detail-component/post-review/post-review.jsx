@@ -4,8 +4,9 @@ import { useForm } from "react-hook-form"
 import { useState } from "react"
 import SetRatingComponent from "../../card/rating/rating"
 import { useEffect } from "react"
+import { setReview } from "../../../utils/firebase/firebaseClient"
 
-const PostReview = ({userData}) => {  
+const PostReview = ({userData, uid }) => {  
   
   const [reviewValue, setReviewValue] = useState(0);
   const reviewForm = useForm({
@@ -13,10 +14,8 @@ const PostReview = ({userData}) => {
       review: ""
     }
   });
-
   const {register, handleSubmit, reset, formState: {errors, isSubmitSuccessful} } = reviewForm;
 
-  
   useEffect(()=>{
     if(isSubmitSuccessful)
     {      
@@ -24,22 +23,23 @@ const PostReview = ({userData}) => {
     }
   }, [isSubmitSuccessful, reset])
 
-  const onSubmit = (data)=> {
-    console.log(data)
-    console.log(reviewValue)
-    console.log(Date())
-    console.log(userData.displayName)
-
+  const onSubmit = ({review})=> {
+    const reviews = {
+      date: new Date(),
+      rating: reviewValue,
+      review,
+      user: userData.displayName
+    }
+    setReview(reviews, uid)  
   }
-
-
 
   return (
     <div className={styles.postReviewContainer}>
+      <h3>Ingrese su reseña</h3>
       <form className={styles.postReviewForm} onSubmit={handleSubmit(onSubmit)} noValidate id="postReviewForm">  
         <Stack spacing={2}> 
           <TextField
-            label="Ingrese su reseña"                    
+            label="Reseña"                    
             type="text"
             autoComplete=""
             required            
@@ -50,8 +50,9 @@ const PostReview = ({userData}) => {
         </Stack>
         <SetRatingComponent rValue={reviewValue} sValue={setReviewValue} />
       </form>
-
-      <button form="postReviewForm" type="submit">Enviar</button>
+      <section className={styles.btnReview}>
+        <button form="postReviewForm" type="submit"  >Enviar</button>
+      </section>
     </div>
   )
 }

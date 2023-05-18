@@ -22,15 +22,22 @@ const DetailProduct = () => {
     getProductDetail(id);
   }, [id])
 
+  
+
   const getProductDetail = async (id) => {
     try {
-      const product = await getProductByid(id)
-      setProduct(product[0])
+      await getProductByid(id,dat =>{        
+        setProduct(dat.data())
+      })          
+
       setIsLoading(false)
     } catch (error) {
       console.error(error);
     }
   }
+
+
+
 
   return (
     isLoading ? <Loader /> :
@@ -39,7 +46,7 @@ const DetailProduct = () => {
       ?
       <Container maxWidth="xl" sx={{marginTop:"80px"}}>
         <div className={styles.detailContainer}>
-          <DetailComponent productDetail = {product} />
+          <DetailComponent productDetail = {product} productId={id} />
         </div>
       </Container>
       :

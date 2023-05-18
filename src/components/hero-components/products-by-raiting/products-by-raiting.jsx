@@ -1,6 +1,7 @@
 import { Grid, Typography } from "@mui/material";
 import { useSelector } from "react-redux";
 import CardInf from "../../card/card";
+import Loader from "../../loader/loader";
 
 
 const ProductsByRaiting = () => {
@@ -22,7 +23,7 @@ const ProductsByRaiting = () => {
               sale={sortedProductsByRating.sale}
               rating={sortedProductsByRating.rating}
             />
-          )) : (null)
+          )) : <Loader />
         }
       </Grid>
     </div>

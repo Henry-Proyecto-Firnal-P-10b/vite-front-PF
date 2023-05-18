@@ -15,6 +15,7 @@ import Authentication from "./routes/authentication/authentication";
 import {
   createUserDocumentFromAuth,
   getCategories,
+  getOrdersAdmin,
   getProducts,
   onAuthStateChangedListener,
 } from "./utils/firebase/firebaseClient";
@@ -29,6 +30,9 @@ import SignUp from "./routes/authentication/signUp";
 // import User from "./components/panel-admin/user/User";
 import UserProfile from "./routes/userProfile/UserProfile";
 import ResetPass from "./routes/reset-password/reset-password";
+// import AboutUs from "./routes/AboutUs/AboutUs";
+import { ordersAction } from "./features/orders/orders";
+
 
 const App = () => {
   const dispatch = useDispatch();
@@ -64,6 +68,19 @@ const App = () => {
     });
     let category = await getCategories();
     dispatch(getCategoriesAction(category));
+    getOrdersAdmin(a=>{
+      const orders = [];
+      a.forEach((element) => {
+        const id = element.id;
+        const data = element.data();
+        orders.push({
+          id,
+          ...data,
+        });
+      });
+      dispatch(ordersAction(orders))
+      
+    })
   };
 
   return (
@@ -76,6 +93,7 @@ const App = () => {
         <Route path="detail/:id" element={<DetailProduct />} />
         <Route path="perfil" element={<UserProfile/>} />
         <Route path ="/reset-password" element={<ResetPass/>}/>
+        {/* <Route path="about-us" element={<AboutUs/>} /> */}
       </Route>
       {userData?.admin && (
         <Route
