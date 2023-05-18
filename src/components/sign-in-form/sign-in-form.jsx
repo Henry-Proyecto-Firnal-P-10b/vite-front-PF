@@ -55,6 +55,10 @@ const SignInForm = () => {
       }
     }
   }
+
+
+
+
   return (
     <Grid item md={8} xs={10}>      
       <Typography variant="h4" color="initial" align='center'>
@@ -98,7 +102,8 @@ const SignInForm = () => {
           </Stack>
         </form> 
         <Grid container justifyContent={'center'} marginTop={2}>
-          <Link to={'/sign-up'}> ¿No tienes cuenta? Registrarse <span style={{color:"#1ac8db"}}>aquí</span> </Link>             
+          <Link to={'/reset-password'}>¿Olvidaste tu contraseña?</Link>
+          <Link to={'/sign-up'}> ¿No tienes cuenta? Regístrate <span style={{color:"#1ac8db"}}>aquí</span> </Link>             
         </Grid>
     </Grid>
   );

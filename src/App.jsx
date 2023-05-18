@@ -27,9 +27,9 @@ import {
 } from "./features/products/productSlice";
 import { getCategoriesAction } from "./features/categories/categoriesSlice";
 import SignUp from "./routes/authentication/signUp";
-
 // import User from "./components/panel-admin/user/User";
 import UserProfile from "./routes/userProfile/UserProfile";
+import ResetPass from "./routes/reset-password/reset-password";
 // import AboutUs from "./routes/AboutUs/AboutUs";
 import { ordersAction } from "./features/orders/orders";
 
@@ -92,6 +92,7 @@ const App = () => {
         <Route path="shop/*" element={<Shop />} />
         <Route path="detail/:id" element={<DetailProduct />} />
         <Route path="perfil" element={<UserProfile/>} />
+        <Route path ="/reset-password" element={<ResetPass/>}/>
         {/* <Route path="about-us" element={<AboutUs/>} /> */}
       </Route>
       {userData?.admin && (
