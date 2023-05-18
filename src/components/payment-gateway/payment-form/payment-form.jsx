@@ -9,8 +9,7 @@ import CheckoutItem from "../../../components/payment-gateway/checkout-item/chec
 import { setCartTotal, updateInitialState } from '../../../features/cartSlice/cartSlice'
 import { useEffect, useState } from 'react';
 import Swal from "sweetalert2";
-
-
+import emailjs from '@emailjs/browser';
 
 const PaymentForm = () => {
 
@@ -29,8 +28,29 @@ const PaymentForm = () => {
   const stripe = useStripe();
   const elements = useElements();
   const navigate = useNavigate();
-  const currentUser = useSelector(state => state.persistedReducer.userData.userInf)
+  const currentUser = useSelector(state => state.persistedReducer.userData)
   const uid = useSelector(state => state.currentUser.userCredentials.uid);
+
+//emailJs
+const USER_ID="service_8duinll";
+const API_KEY= "template_g954u96";
+const TEMPLATE_ID= "lp4j5eTKXZNYsZ4jM";
+
+var templateParams = {
+  email: currentUser.orderInf.email,
+  name: currentUser.orderInf.name,
+};
+
+
+  const sendEmail = (e) =>{
+    e.preventDefault()
+    emailjs.send(USER_ID, API_KEY, templateParams, TEMPLATE_ID).then((result) => {
+      console.log(result.text);
+    }, (error) => {
+      console.log(error.text)
+    });
+  };
+
 
   const paymentHandler = async (e) => {
     e.preventDefault();
@@ -84,6 +104,7 @@ const PaymentForm = () => {
           icon: 'success',
           showCancelButton: true,
         })
+        sendEmail();
         navigate("/");
         dispatch(clearCart());
       }
@@ -98,7 +119,7 @@ const PaymentForm = () => {
       <div className={styles.cardContainer}>
       <div className={styles.paymentFormHeader}>
       </div>
-      <form className={styles.FormContainer} onSubmit={paymentHandler} id="creditCardForm" >
+      <form className={styles.FormContainer}  id="creditCardForm" >
         <h4>Card</h4>
         <div className={styles.creditCardContainer}>
           <CardElement />
@@ -106,7 +127,7 @@ const PaymentForm = () => {
       </form>
 
         <br/>
-      <button form="creditCardForm" type="submit" className={styles.btn}>Pagar</button>
+      <button form="creditCardForm" type="submit" className={styles.btn} onClick={paymentHandler}>Pagar</button>
         </div>
       <div className={styles.cartContainer}>
       {cartItems?.map((cartItem, index) => (
