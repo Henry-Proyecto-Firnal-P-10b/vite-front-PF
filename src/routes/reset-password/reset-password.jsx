@@ -3,72 +3,58 @@ import TextField from '@mui/material/TextField'
 import Button from '@mui/material/Button';
 import Swal from 'sweetalert2';
 import React, { useState } from 'react';
+import {resetPasswordEmail, updatePasswordInDatabase} from '../../utils/firebase/firebaseClient'
+import 'firebase/auth';
+import 'firebase/database';
 
-const ResetPass = ()=>{
-    const [newPass, setNewPass] = useState('');
-    const [confirmPass, setConfirmPass] = useState('');
-    const [passMatch, setPassMatch] = useState(true);
+    const ResetPass = () => {
 
-    const handleNewPass = (event) =>{
-        setNewPass(event.target.value);
-    }
+    const [email, setEmail] = useState('');
+  const [newPassword, setNewPassword] = useState('');
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(false);
 
-    const handleConfirmPass = (event) => {
-        setConfirmPass(event.target.value);
-    }
-
-    const handleSubmit = (event) => {
-        event.preventDefault();
-    if(newPass === confirmPass) {
-        console.log('contraseña actualizada');
-        Swal.fire({
+  const handlePasswordReset = async () => {
+    try {
+        console.log('email:', email)
+      await resetPasswordEmail(email);
+    console.log('mensaje enviado!')
+            Swal.fire({
             title: 'Éxito!',
             text: 'Su contraseña ha sido actualizada.',
             icon: 'success',
-        })        
-        setNewPass('');
-        setConfirmPass('');
-        setPassMatch(true);
-    } else{
-        console.log('las contraseñas no coinciden');
+        }) 
+    } catch (error) {
+      setError(error.message);
+      console.log("error:", error)
         Swal.fire({
-            title: 'Error!',
-            text: 'Las contraseñas no coinciden.',
-            icon: 'error',
-        })    
-        setPassMatch(false);
-    }}
+      title: 'Error!',
+      text: 'Ingrese nuevamente su correo electónico.',
+      icon: 'error',
+  })
+    }
+  };
 
-    return(
-        <div>
-            <h1>Cambio de contraseña</h1>
-        <form>
+
+ return (
+    <div>
+        <div className={styles.fullContainer}>
+      <h2>Recupera tu contraseña</h2>
             <TextField
-            label='Nueva contraseña'
-            type='password'
+            label='Correo electrónico'
+            type='text'
             required                  
-            value={newPass}
-            onChange={handleNewPass}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             autoComplete=""
-            sx={{width:'40%', marginBottom: '1rem'}}
+            sx={{width:'40%', marginBottom: '1rem',
+        marginTop: '3%'}}
             />
-            <TextField
-            label='Confirmar contraseña'
-            type='password'
-            required               
-            value={confirmPass}
-            onChange={handleConfirmPass}
-            autoComplete=""
-            sx={{width:'40%', marginBottom: '1rem'}}
-            />
-        {/* </Stack> */}
-        <Button variant='contained' sx={{
-            fontSize: '15px',
-            marginTop: '2%',
-        }} onClick={handleSubmit}>Cambiar contraseña</Button>
-            </form>
+          <button onClick={handlePasswordReset}>Enviar correo de recuperación</button>
         </div>
-    )
-}
+      {/* {error && <p>{error}</p>} */}
+    </div>
+  );
+ };
 
 export default ResetPass

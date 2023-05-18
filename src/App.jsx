@@ -28,7 +28,6 @@ import { getCategoriesAction } from "./features/categories/categoriesSlice";
 import SignUp from "./routes/authentication/signUp";
 // import User from "./components/panel-admin/user/User";
 import UserProfile from "./routes/userProfile/UserProfile";
-import ForgottenPass from "./routes/reset-password/forgotten-password";
 import ResetPass from "./routes/reset-password/reset-password";
 
 const App = () => {
@@ -76,7 +75,6 @@ const App = () => {
         <Route path="shop/*" element={<Shop />} />
         <Route path="detail/:id" element={<DetailProduct />} />
         <Route path="perfil" element={<UserProfile/>} />
-        <Route path ="/forgotten-password" element={<ForgottenPass/>}/>
         <Route path ="/reset-password" element={<ResetPass/>}/>
       </Route>
       {userData?.admin && (
