@@ -1,19 +1,19 @@
-import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import styles from './payment-form.module.css';
+import { useDispatch, useSelector } from "react-redux"
+import { useNavigate } from "react-router-dom"
+import styles from './payment-form.module.css'
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js"
-import { clearCart } from "../../../features/cartSlice/cartSlice";
-import { numberFormat } from "../../../helper/numberFormat";
+import { clearCart } from "../../../features/cartSlice/cartSlice"
+import { numberFormat } from "../../../helper/numberFormat"
 import CheckoutItem from "../../../components/payment-gateway/checkout-item/checkout-item"
 import { setCartTotal, updateInitialState } from '../../../features/cartSlice/cartSlice'
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react'
 import Swal from "sweetalert2";
-import formatOnlinePurcase from "../../../helper/formatOnlinePurchase";
-import { ordersGlobal, updatePurchases } from "../../../utils/firebase/firebaseClient";
+import formatOnlinePurcase from "../../../helper/formatOnlinePurchase"
+import { ordersGlobal, updatePurchases } from "../../../utils/firebase/firebaseClient"
 
 const PaymentForm = () => {
 
-  const cartItems = useSelector(state => state.persistedReducer.carState.cartItems);
+  const cartItems = useSelector(state => state.persistedReducer.carState.cartItems)
 
   const [total, setTotal] = useState(0);
   const dispatch = useDispatch();
