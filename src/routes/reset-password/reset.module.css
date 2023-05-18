@@ -1,0 +1,104 @@
+/* form{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;  
+    /* margin-bottom: 18%; */
+    /* margin-top: 3%;
+} */
+
+.fullContainer{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;    
+    /* border: 2px solid red; */
+}
+
+h2{
+    font-size: 40px;
+    font-weight: bold;
+    margin-top: 10%;
+    margin-bottom: 5%;
+
+}
+
+label{
+    font-size: 25px;
+    font-weight: bold;
+    margin-right: 2rem;
+}
+
+input{
+    padding: 10px;
+    border: 1px solid darkgray;
+    border-radius: 10px;
+    width: 40%;
+
+}
+
+button{
+    padding: 15px;
+    background-color: rgb(57, 155, 235);
+    color: white;
+    font-size: 20px;
+    margin-top: 5%;
+    margin-bottom: 20%;
+    border-radius: 10px;
+    transition: 0.3s;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+button:hover{
+    background-color:rgb(18, 84, 138);
+
+}
+
+
+/* Estilos para pantallas pequeñas (hasta 767px) */
+@media (max-width: 767px) {
+  .fullContainer {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .fullContainer h2 {
+    font-size: 40px;
+    margin-top: 30%;
+    margin-bottom: 15%;
+  }
+
+  .fullContainer button {
+    font-size: 18px;
+    margin-bottom: 30%;
+    margin-top: 10%;
+  }
+
+}
+
+/* Estilos para pantallas medianas (768px - 1023px) */
+@media (min-width: 768px) and (max-width: 1023px) {
+  .fullContainer {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .fullContainer h2 {
+    font-size: 40px;
+    margin-top: 30%;
+    margin-bottom: 10%;
+  }
+
+  .fullContainer button {
+    font-size: 18px;
+    margin-bottom: 30%;
+    margin-top: 10%;
+  }
+
+}

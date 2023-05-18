@@ -36,7 +36,7 @@ import AllProducts from '../all-products/all-products';
 import VentasTotales from '../orders/ventasTotales';
 import Inicio from '../home-admin/home-admin';
 import Users from '../users/users';
-import User from '../user/User';
+import User from '../user/user';
 
 
 

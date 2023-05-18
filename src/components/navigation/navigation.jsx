@@ -46,7 +46,7 @@ const Navigation = () => {
   }
 
   const handleClick = () => {
-    setIsToggleOn(!isToggleOn);
+    setIsToggleOn(false);
     dispatch(getProductsActions(productsCopy))
     dispatch(productsName([]))
     dispatch(setPagesActions(Math.ceil(productsCopy.length / 8)))

@@ -4,19 +4,26 @@ import { useForm } from "react-hook-form"
 import { useState } from "react"
 import SetRatingComponent from "../../card/rating/rating"
 import { useEffect } from "react"
+import { setReview } from "../../../utils/firebase/firebaseClient"
+import Swal from "sweetalert2"
 
-const PostReview = ({userData}) => {  
+const PostReview = ({userData, uid, allReviews }) => {  
   
+  const [hadReview, setHadReview] = useState(false);
+
   const [reviewValue, setReviewValue] = useState(0);
   const reviewForm = useForm({
     defaultValues:{
       review: ""
     }
   });
-
   const {register, handleSubmit, reset, formState: {errors, isSubmitSuccessful} } = reviewForm;
 
-  
+  useEffect(()=> {  
+    const response = allReviews.find(review => review.user === userData.displayName)
+    setHadReview(!! response)    
+  }, [allReviews, userData.displayName])
+
   useEffect(()=>{
     if(isSubmitSuccessful)
     {      
@@ -24,22 +31,24 @@ const PostReview = ({userData}) => {
     }
   }, [isSubmitSuccessful, reset])
 
-  const onSubmit = (data)=> {
-    console.log(data)
-    console.log(reviewValue)
-    console.log(Date())
-    console.log(userData.displayName)
-
+  const onSubmit = ({review})=> {
+    const reviews = {
+      date: new Date(),
+      rating: reviewValue,
+      review,
+      user: userData.displayName
+    }
+    if(!hadReview) return setReview(reviews, uid)  
+    Swal.fire('Solo puede dar 1 review por producto')
   }
-
-
 
   return (
     <div className={styles.postReviewContainer}>
+      <h3>Ingrese su reseña</h3>
       <form className={styles.postReviewForm} onSubmit={handleSubmit(onSubmit)} noValidate id="postReviewForm">  
         <Stack spacing={2}> 
           <TextField
-            label="Ingrese su reseña"                    
+            label="Reseña"                    
             type="text"
             autoComplete=""
             required            
@@ -50,8 +59,9 @@ const PostReview = ({userData}) => {
         </Stack>
         <SetRatingComponent rValue={reviewValue} sValue={setReviewValue} />
       </form>
-
-      <button form="postReviewForm" type="submit">Enviar</button>
+      <section className={styles.btnReview}>
+        <button form="postReviewForm" type="submit"  >Enviar</button>
+      </section>
     </div>
   )
 }

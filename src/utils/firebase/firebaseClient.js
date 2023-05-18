@@ -1,7 +1,9 @@
 /* eslint-disable no-undef */
 /* eslint-disable no-unused-vars */
 import { initializeApp} from "firebase/app";
-
+import * as firebase from 'firebase/app';
+import 'firebase/auth';
+import 'firebase/database';
 import {
   getAuth,
   signInWithPopup,
@@ -9,7 +11,8 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
   signOut,
-  onAuthStateChanged
+  onAuthStateChanged, 
+  sendPasswordResetEmail
 } from "firebase/auth";
 
 import {
@@ -31,6 +34,9 @@ import {
   DocumentReference,
   refEqual,
   onSnapshot,
+  arrayUnion,
+  FieldValue,
+  arrayRemove,
 } from "firebase/firestore";
 
 import {
@@ -39,6 +45,7 @@ import {
   uploadBytes, 
   getDownloadURL 
 } from 'firebase/storage';
+import { set } from "react-hook-form";
 
 import {
   v4
@@ -89,13 +96,13 @@ export const createUserDocumentFromAuth = async (
     try {
       //Set it inside our data base
       await setDoc(userDocRef, {
-        displayName,
-        email,
-        createdAt,
-        onlinePurchases: [],
-        userData:[],
         active:true,
         admin:false,   
+        createdAt,
+        displayName,
+        email,
+        onlinePurchases: [],
+        userData:{},
         ...additionalInformation,
       });
     } catch (error) {
@@ -139,11 +146,9 @@ export const onAuthStateChangedListener = (callback) => onAuthStateChanged(auth,
 
 //trae Productos existentes
 export const getProducts = async (Products) => {
-
-    const q = query(collection(db, "Products"))
-     onSnapshot(q, (Products));
-  
-   }
+  const q = query(collection(db, "Products"))
+    onSnapshot(q, (Products));  
+  }
 
 //Agrega nuevos productos
 export const postProductsAdmin = async (data) => {
@@ -161,15 +166,19 @@ export const postProductsAdmin = async (data) => {
   });
 };
 //Trae un producto por id
-export const getProductByid = async (id) => {
-  const Product = [];
-  const docRef = doc(db, "Products", id);
-  const docSnap = await getDoc(docRef);
-  Product.push({
-    id,
-    ...docSnap.data(),
-  });
-  return Product;
+export const getProductByid = async (id,dat) => {
+
+  // const Product = [];
+  // const docRef = doc(db, "Products", id);
+  // const docSnap = await getDoc(docRef);
+  // Product.push({
+  //   id,
+  //   ...docSnap.data(),
+  // });
+  // return Product;
+
+  onSnapshot(doc(db, "Products", id), (dat));
+
 };
 //Trae un producto por nombre
 export const getProductByName = async (name) => {
@@ -223,39 +232,81 @@ export const getUserByName = async (name) => {
   return findUser;
 };
 //Trae un usuario por id
-export const getUserByid = async (id) => {
-  const docRef = doc(db, "user", id);
-  const docSnap = await getDoc(docRef);
-  return docSnap.data();
-};
+
+export const getUserByid  = async (id , dat) =>{
+
+  onSnapshot(doc(db, "user", id), (dat));
+}
 //----------------------------------------------------------------------
 //trae todos los pedidos a dashboard del admin
-export const getOrdersAdmin = async () => {
-  const querySnapshot = await getDocs(collection(db, "Orders"));
-  let orders = [];
-  querySnapshot.forEach((doc) => {
-    const id = doc.id;
-    const datos = doc.data();
-    orders.push({
-      id,
-      ...datos,
-    });
-  });
-  console.log(orders);
-  return orders;
+export const getOrdersAdmin = async (orders) => {
+
+  const q = query(collection(db, "Orders"))
+ onSnapshot(q, (orders));
 };
 
 //---- trae pedidos por id
 export const getOrderByid = async (id) => {
-  const orders = [];
-  const docRef = doc(db, "Orders", id);
+
+  const products = [];
+  const docRef = doc(db, "Orders",id);
   const docSnap = await getDoc(docRef);
-  orders.push({
-    id,
-    ...docSnap.data(),
-  });
-  return orders;
+const dataOrder = docSnap.data();
+  docSnap.data().products.forEach(pro =>{
+ 
+    products.push(pro)
+  })
+  return {dataOrder, products}
 };
+
+//global orders
+
+export const  ordersGlobal = async (order,uid)=>{
+  await setDoc(doc(db, "Orders",order.orderId), {
+    date: order.date,
+    orderId: order.orderId,
+    products: order.products,
+    status: order.status,
+    totalPrice: order.totalPrice,
+    totalProducts: order.totalProducts,
+    clientId: uid,
+  });
+}
+// eliminar ordenes
+export const deleteOrders = async (orderId) =>{
+await deleteDoc(doc(db, "Orders", orderId));
+}
+//funcion para atender las ordenes desde el admin
+export const serveOrder = async(previousOrder, newOrder) =>{   
+const docRef = doc(db,"user",previousOrder.clientId)
+const ordRef = doc(db,"Orders",previousOrder.orderId)
+ await updateDoc(docRef, {
+  onlinePurchases: arrayRemove({
+    date : previousOrder.date,
+    orderId :previousOrder.orderId,
+    status : previousOrder.status,
+    products : previousOrder.products,
+    totalPrice : previousOrder.totalPrice,
+    totalProducts : previousOrder.totalProducts
+  }) 
+})
+await updateDoc(docRef, {
+  onlinePurchases: arrayUnion({...newOrder})
+
+})  
+await updateDoc(ordRef,{
+  date: newOrder.date,
+  orderId :newOrder.orderId,
+  clientId : previousOrder.clientId,
+  status : newOrder.status,
+  products :newOrder.products,
+  totalPrice : newOrder.totalPrice,
+  totalProducts: newOrder.totalProducts,
+ // numberTracking: newOrder.numberTracking
+})
+
+
+}
 
 // actualiza status de pedidos
 export const updateOrder = async (data) => {
@@ -271,7 +322,7 @@ export const updateOrder = async (data) => {
     userEmail: data.userEmail,
     userAddress: data.userAddress,
     orderTracking: data.orderTracking,
-  });
+  }); 
 };
 
 /// //funcionalidades para traer categorias
@@ -369,5 +420,42 @@ export const setPropsUser = async(prop, uid)=>{
   await setDoc(propUserRef,
     prop
   ,{merge:true})
+}
+
+//email reset de contraseña
+export const resetPasswordEmail = async (email) => {
+  try {
+    const myAuth = getAuth(firebaseApp)
+    await sendPasswordResetEmail(myAuth, email).then(()=>{console.log('email enviado!')});
+    // return true;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
+export const updatePasswordInDatabase = async (userId, newPassword) => {
+  try {
+    await firebase.database().ref(`user/${userId}`).update({ password: newPassword });
+    return true;
+  } catch (error) {
+    throw new Error(error.message);
+  }
+};
+
+// agregar compras al usuario sin borrar lo que ya tenga
+export const updatePurchases = async(purchases, uid) =>{
+  const purchasesRef = doc(db, 'user', uid)
+  await updateDoc(purchasesRef, {
+    onlinePurchases: arrayUnion(...purchases)
+  })
+}
+
+export const setReview = async(review, uid) => {
+//onSnapshot(doc(db, "user", id), (dat));
+  const productsRef = doc(db, 'Products', uid)
+
+  await updateDoc(productsRef, {
+    reviews: arrayUnion(review)
+  })
 }
 

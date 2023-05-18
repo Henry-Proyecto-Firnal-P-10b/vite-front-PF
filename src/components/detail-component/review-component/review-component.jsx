@@ -1,7 +1,9 @@
 import timeStampToDate from "../../../helper/timeStampToDate"
 import HalfRatingPreview from "../../card/rating/rating-preview";
 import styles from "./review-component.module.css"
-const ReviewComponent = ({ review: { user, review, date, rating } }) => {
+const ReviewComponent = ({reviewInf}) => {
+  const {review, date, user, rating} = reviewInf;
+  
   const publishedIn = timeStampToDate(date);
 
   return (

@@ -2,7 +2,6 @@ import TextField from '@mui/material/TextField'
 import { useForm } from "react-hook-form"
 // import PaymentForm from '../payment-form/payment-form'
 import Stack from '@mui/material/Stack'
-
 import styles from "./checkout-form.module.css"
 import { useDispatch } from 'react-redux'
 import { setOrderInf } from '../../../features/userData/userDataSlice'
@@ -19,7 +18,7 @@ const CheckoutForm = () => {
       lastName: "",
       company: "",
       country: "",
-      streetA: "",
+      streetA: "",    
       ZIPcode: "",
       phone: "",
       email: "",
@@ -33,8 +32,13 @@ const CheckoutForm = () => {
     dispatch(setOrderInf(e))
     navigate("/shop/payment");
   }
-  return (
 
+  const validateEmail = (value) => {
+    const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return regex.test(value) || "Correo electrónico inválido";
+  }
+
+  return (
     <form onSubmit={handleSubmit(onSubmit)} noValidate>
       <Stack spacing={2}>
         <TextField
@@ -42,7 +46,7 @@ const CheckoutForm = () => {
           type="text"
           autoComplete=""
           required
-          {...register("name", { required: "Ingrese el nombre del destinatario" })}
+          {...register("name", { required: "Ingrese el nombre del destinatario", maxLength: 20, minLength:3 })}
           error={!!errors.name}
           helperText={errors.name?.message}
         />
@@ -51,11 +55,10 @@ const CheckoutForm = () => {
           type="text"
           autoComplete=""
           required
-          {...register("lastName", { required: "Ingrese el apellido del destinatario" })}
+          {...register("lastName", { required: "Ingrese el apellido del destinatario", maxLength: 25, minLength:3  })}
           error={!!errors.lastName}
           helperText={errors.lastName?.message}
         />
-
         <TextField
           label="Nombre de la Empresa"
           type="text"
@@ -64,7 +67,6 @@ const CheckoutForm = () => {
           error={!!errors.company}
           helperText={errors.company?.message}
         />
-
         <TextField
           label="Cuidad"
           type="text"
@@ -75,11 +77,11 @@ const CheckoutForm = () => {
           helperText={errors.country?.message}
         />
         <TextField
-          label="Dirreción"
+          label="Calle"
           type="text"
           autoComplete=""
           required
-          {...register("streetA", { required: "Ingrese la direccion del destinatario" })}
+          {...register("streetA", { required: "Ingrese la calle del destinatario", maxLength: 20, minLength:3 })}
           error={!!errors.streetA}
           helperText={errors.streetA?.message}
         />
@@ -88,7 +90,7 @@ const CheckoutForm = () => {
           type="text"
           autoComplete=""
           required
-          {...register("ZIPcode", { required: "Ingrese el codigo postal del destinatario" })}
+          {...register("ZIPcode", { required: "Ingrese el codigo postal del destinatario", maxLength: 10, minLength: 4 })}
           error={!!errors.ZIPcode}
           helperText={errors.ZIPcode?.message}
         />
@@ -97,15 +99,15 @@ const CheckoutForm = () => {
           type="text"
           autoComplete=""
           required
-          {...register("phone", { required: "Ingrese el numero de celular del destinatario" })}
+          {...register("phone", { required: "Ingrese el numero de celular del destinatario", maxLength:15, minLength:6 })}
           error={!!errors.phone}
           helperText={errors.phone?.message}
         />
         <TextField
           label="Email"
-          type="text"
+          type="email"
           autoComplete=""
-          {...register("email")}
+          {...register("email", {required: true, validate: validateEmail})}
           error={!!errors.email}
           helperText={errors.email?.message}
         />
@@ -113,7 +115,7 @@ const CheckoutForm = () => {
           label="Informacion adicional"
           type="text"
           autoComplete=""
-          {...register("orderNotes")}
+          {...register("orderNotes", { maxLength: 200})}
           error={!!errors.orderNotes}
           helperText={errors.orderNotes?.message}
         />

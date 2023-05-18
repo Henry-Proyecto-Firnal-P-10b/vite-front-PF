@@ -19,7 +19,7 @@ const Products = () => {
         <Filters />
       </div>
       <article>
-        <Container maxWidth="xl" sx={{ minHeight: "100vh", pt: "2rem" }}>
+        <Container maxWidth="xl" sx={{ minHeight: "100vh", pt: "2rem" , marginTop:"80px" }}>
           <Grid container justifyContent={"center"} >
             {
               products.length ? products.map((products, i) => (

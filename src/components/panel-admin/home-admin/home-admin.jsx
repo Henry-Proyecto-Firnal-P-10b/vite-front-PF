@@ -1,11 +1,15 @@
 
 import styles from "../home-admin/home-admin.module.css"
-//Import Material UI
-// import { Box, Typography } from '@mui/material';
+import { useSelector } from "react-redux"
 
 
 const HomeAdmin = () => {
-  
+
+  const selector = useSelector(state => state.cart)
+
+  console.log(selector)
+
+
   return (
 <div className={styles.base}>
 

@@ -6,6 +6,7 @@
   z-index: 999;
   transform: translate(-300px);
   transition: all .7s ease-in-out;
+  margin-top: 80px;
 }
 .dropListContainer:hover
 {

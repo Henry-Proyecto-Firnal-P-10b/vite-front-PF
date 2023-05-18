@@ -1,0 +1,98 @@
+.conteiner{
+    display: grid;
+    justify-content: center;
+    width: 100%;
+    min-height: 80vh;
+}
+.nosotros{
+    margin-top: 4rem;
+    padding: 1rem;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+    border-bottom: 1px solid rgb(124, 228, 247);
+}
+.perfiles{
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
+    gap: 15vh;
+    justify-content: center;
+    padding-top: 1rem;
+    margin-top: 1rem;
+}
+.git{
+    border-bottom: 1px solid rgb(124, 228, 247);
+    display: row;
+    border-radius: 9px;
+}
+
+.image img{
+    display: flex;
+    border-radius: 50% !important;
+    width: 8vw;
+}
+.image{
+    padding: 1rem;
+    display: flex;
+    justify-content: center;  
+}
+
+.name{
+    display: flex;
+    justify-content: center;
+    font-size:1.2rem;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
+    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+    sans-serif;
+}
+
+.links{
+    display: flex;
+    justify-content: center;
+}
+.links button{
+    position: relative;
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    padding: 0.8rem;
+    font-size: 0.1rem;
+}
+
+.links button:hover{
+    background-color: rgb(233, 245, 255);
+}
+
+.git:hover{
+    box-shadow: 4px 4px 5px rgb(193, 237, 245);
+}
+
+@media only screen and (max-width: 800px) {
+    
+    .conteiner{
+        min-height: max-content;
+    }
+    .perfiles{
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10vh;
+    }
+    .image img{
+        display: block;
+
+        width: 25vw;
+    }
+    
+ 
+  }
+@media only screen and (max-width: 500px) {
+    .perfiles{
+        display: grid;
+        grid-template-columns: repeat(1, 1fr);
+    }
+    .image img{
+        display: block;
+        width: 50vw;
+    }
+ 
+  }

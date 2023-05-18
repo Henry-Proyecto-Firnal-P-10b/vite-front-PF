@@ -1,6 +1,5 @@
 import Carousel from "../../carousel/carousel";
 import Container from '@mui/material/Container'
-
 import styles from "./detail-component.module.css"
 import NoReview from "../no-review/no-review";
 import { numberFormat } from "../../../helper/numberFormat";
@@ -12,60 +11,53 @@ import { useDispatch, useSelector } from "react-redux";
 import { addItemToCart } from "../../../features/cartSlice/cartSlice";
 import { useState } from "react";
 import { useEffect } from "react";
-import Button from '@mui/material/Button'
 import PostReview from "../post-review/post-review";
 
-const DetailComponent = ({ productDetail }) => {
+import { v4 } from "uuid";
 
-  const [purchasedProducts, setPurchasedProducts] = useState(null);
-  const [review, setReview] = useState(null);
-  const [reviewToggle, setReviewToggle] = useState(false);
+const DetailComponent = ({ productDetail, productId }) => {
+  
+
+  const [purchasedProducts, setPurchasedProducts] = useState();
+  const [toggleReview, setToggleReview] = useState(false);
+
   const { userData } = useSelector(state => state.persistedReducer.userData);
-
-  useEffect(() => {
-    if (userData) {
-      setPurchasedProducts(userData.onlinePurchases);
-    } else {
-      setPurchasedProducts(null)
-    }
-  }, [userData])
-
-  useEffect(() => {
-    if (productDetail.id) {
-      setReview(purchasedProducts?.find(product => product.id === productDetail.id));
-    }
-
-  }, [productDetail.id, purchasedProducts])
-
-
-  const {
-    name,
-    price,
-    rating,
-    reviews,
-    stock,
-    categories,
-    description,
-    imageUrl
-  } = productDetail;
-
+  const { name, price, rating, reviews, stock, categories, description, imageUrl } = productDetail;
 
   const dispatch = useDispatch();
 
+  useEffect(() => {
+    if (!userData) return;
+    if (!userData?.onlinePurchases.length) return setPurchasedProducts(null)
+
+    const purchases = userData?.onlinePurchases
+    const allProducts = [];
+
+    purchases.forEach(purchase => {
+      const { products } = purchase;
+      products.forEach(product => {        
+        allProducts.push(product);
+      })
+    })
+
+    setPurchasedProducts(allProducts)
+
+  }, [userData])
+
+  useEffect(() => {
+    if (!purchasedProducts) return;    
+    setToggleReview(!!purchasedProducts.find(({id}) => id === productId )); 
+  }, [ productId, purchasedProducts])
   const handleClickCart = () => {
     const product = {
-      id: productDetail.id,
+      id: productId,
       title: name,
       imageUrl,
       price
     }
     dispatch(addItemToCart(product));
-
   }
 
-  const handleClickPostReview = ()=> {
-    setReviewToggle(!reviewToggle);
-  }
 
   return (
     <Container maxWidth="xl">
@@ -88,29 +80,19 @@ const DetailComponent = ({ productDetail }) => {
               }
             </span>
             <div >
-              {
-                review && <Button variant="contained" color="primary" sx={{mb:"1rem"}} onClick={handleClickPostReview}>
-                  Review
-                </Button>
-              }
             </div>
             <span className={styles.description}>{description}</span>
           </div>
-
         </div>
       </div>
       <div className={styles.reviewsContainer}>
         {
-          reviewToggle &&
-          <PostReview userData={userData} />
+          toggleReview && <PostReview userData={userData} uid={productId} allReviews={reviews} />
         }
-         {
-          reviews.length ?
-            reviews.map((review, index) => (
-              <ReviewComponent key={index} review={review} />))
-            :
-            <NoReview />
-        }            
+        {reviews.length !== 0
+          ? reviews.map((review) => <ReviewComponent key={v4()} reviewInf={review} />)
+          : <NoReview />
+        }
       </div>
     </Container>
 

@@ -11,7 +11,7 @@ import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
-import { BrowserRouter } from 'react-router-dom'
+import { HashRouter } from 'react-router-dom'
 import { CssBaseline, ThemeProvider, createTheme } from '@mui/material'
 //Stripe
 import { Elements } from '@stripe/react-stripe-js'
@@ -40,14 +40,14 @@ ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
    <PersistGate persistor={persist}>
     <Provider store={store}>
-      <BrowserRouter>
+      <HashRouter hashType="hasbang">
         <ThemeProvider theme={theme}>
           <CssBaseline />
           <Elements stripe={stripePromise}>
             <App />
           </Elements>
         </ThemeProvider>
-      </BrowserRouter>
+      </HashRouter>
     </Provider>      
     </PersistGate>
   </React.StrictMode>,

@@ -6,6 +6,7 @@
   height: calc(100vh - 80px);
   overflow: hidden;
   background-color: #242424;
+  margin-top: 80px;
 }
 
 .heroContainer .heroBackgroundImg {
