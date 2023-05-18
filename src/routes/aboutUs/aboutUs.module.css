@@ -1,10 +1,13 @@
 .conteiner{
-    display: grid;
-    justify-content: center;
+    display: flex;
+    flex-direction: column;
     width: 100%;
     min-height: 80vh;
 }
 .nosotros{
+    display: flex;
+    justify-content: center;
+    align-items: center;
     margin-top: 4rem;
     padding: 1rem;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
@@ -14,15 +17,20 @@
 }
 .perfiles{
     display: grid;
-    grid-template-columns: repeat(3,1fr);
-    gap: 15vh;
-    justify-content: center;
+    grid-template-columns: repeat(3, 1fr);
+    justify-items: center;
+    align-items: center;
+    gap: 5vw;
     padding-top: 1rem;
     margin-top: 1rem;
+    padding-left: 10rem;
+    padding-right: 10rem;
 }
 .git{
     border-bottom: 1px solid rgb(124, 228, 247);
-    display: row;
+    display: flex;
+    flex-direction: column;
+    width: 40vh;
     border-radius: 9px;
 }
 
@@ -46,6 +54,7 @@
     sans-serif;
 }
 
+
 .links{
     display: flex;
     justify-content: center;
@@ -67,32 +76,35 @@
     box-shadow: 4px 4px 5px rgb(193, 237, 245);
 }
 
-@media only screen and (max-width: 800px) {
+@media only screen and (max-width: 950px) {
     
     .conteiner{
         min-height: max-content;
     }
     .perfiles{
         display: grid;
+        justify-items: center;
         grid-template-columns: repeat(2, 1fr);
         gap: 10vh;
+        justify-content: center;
     }
     .image img{
         display: block;
-
         width: 25vw;
     }
-    
- 
   }
 @media only screen and (max-width: 500px) {
     .perfiles{
-        display: grid;
-        grid-template-columns: repeat(1, 1fr);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        grid-template-columns: 1fr;
+        width: 100%;
     }
     .image img{
         display: block;
-        width: 50vw;
+        width: 40vw;
     }
  
   }

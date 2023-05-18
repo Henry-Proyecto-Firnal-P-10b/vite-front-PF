@@ -15,7 +15,7 @@ import categoriesSlice from '../features/categories/categoriesSlice'
 import credentialsReducer from '../features/userCredentials/userCredentialsSlice'
 import productPag from '../features/productsPagination/productsPaginationSlice'
 import cartReducer from '../features/cartSlice/cartSlice'
-
+import orderSlice from '../features/orders/orders'
 
 
 const persistConfig = {
@@ -40,6 +40,7 @@ export const store = configureStore({
     productsId: productsIdSlice,
  //   carrito: carritoSlice,
     persistedReducer,
+    orders : orderSlice,
     favorite: favoriteSlice,
     categories: categoriesSlice,
     productPag : productPag,

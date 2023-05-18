@@ -1,32 +1,50 @@
 import { useDispatch, useSelector } from "react-redux";
-import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js"
+import { useNavigate } from "react-router-dom";
 import styles from './payment-form.module.css';
+import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js"
 import { clearCart } from "../../../features/cartSlice/cartSlice";
 import { numberFormat } from "../../../helper/numberFormat";
-import { useNavigate } from "react-router-dom";
-import setDataUser from "../../../helper/setDataUser";
+import CheckoutItem from "../../../components/payment-gateway/checkout-item/checkout-item"
+import { setCartTotal, updateInitialState } from '../../../features/cartSlice/cartSlice'
+import { useEffect, useState } from 'react';
+import Swal from "sweetalert2";
+import formatOnlinePurcase from "../../../helper/formatOnlinePurchase";
+import { updatePurchases } from "../../../utils/firebase/firebaseClient";
 
 const PaymentForm = () => {
+
+  const cartItems = useSelector(state => state.persistedReducer.carState.cartItems);
+
+  const [total, setTotal] = useState(0);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    const newCartTotal = cartItems.reduce((total, cartItem) => total + cartItem.quantity * cartItem.price, 0)
+    setTotal(newCartTotal);
+    dispatch(setCartTotal(newCartTotal));
+    dispatch(updateInitialState(cartItems))
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [cartItems])
+  
   const stripe = useStripe();
   const elements = useElements();
   const navigate = useNavigate();
-  const dispatch = useDispatch();
-  const {cartTotal, cartItems} = useSelector(state => state.persistedReducer.carState);
   const currentUser = useSelector(state => state.persistedReducer.userData.userInf)
   const uid = useSelector(state => state.currentUser.userCredentials.uid);
+
+  const onlinePurchase = formatOnlinePurcase(cartItems, total);
 
   const paymentHandler = async (e) => {
     e.preventDefault();
     if (!stripe || !elements) {
       return;
     }
-
     const response = await fetch('/.netlify/functions/create-payments-intent', {
       method: 'post',
       headers: {
         'content-Type': 'application/json'
       },
-      body: JSON.stringify({ amount: cartTotal * 100 })
+      body: JSON.stringify({ amount: total * 100 })
     }).then(res => res.json()).catch(error => alert(error));
 
     const { paymentIntent: { client_secret } } = response;
@@ -41,37 +59,53 @@ const PaymentForm = () => {
     });
 
     if (paymentResult.error) {
-      alert(paymentResult.error.message);
+      Swal.fire({
+        title:'Ocurrió un error!',
+        text: paymentResult.error.message,
+        icon: 'warning',
+      })
     } else {
       if (paymentResult.paymentIntent.status === "succeeded") {
-        
-        const updateDataUser = async () => {
-          if(!uid) alert("no hay un usuario");
-          await setDataUser("onlinePurchases", cartItems, uid );
-        }
-        updateDataUser();
-        alert("Pago exitoso gracias por su compra!");
-        navigate("/");
+        if(!uid) return alert("no hay un usuario");              
+        Swal.fire({
+          title:'Pago exitoso!',
+          icon: 'success',
+          showCancelButton: true,
+        })
+
+        updatePurchases(onlinePurchase, uid)
+        navigate("/");        
         dispatch(clearCart());
+
       }
     }
   };
 
 
   return (
+    <div style={{marginTop:"80px"}}>
+        <h2>Detalles del pago</h2>
     <div className={styles.PaymentFormContainer} >
-
+      <div className={styles.cardContainer}>
       <div className={styles.paymentFormHeader}>
-        <h2>Ingrese sus datos de pago</h2>
-        <span>Total a pagar <span> {numberFormat(cartTotal)}</span> USD</span>
       </div>
       <form className={styles.FormContainer} onSubmit={paymentHandler} id="creditCardForm" >
-        <h4>Credit card</h4>
+        <h4>Card</h4>
         <div className={styles.creditCardContainer}>
           <CardElement />
         </div>
       </form>
-      <button form="creditCardForm" type="submit" className={styles.btn}>Pagar ahora</button>
+
+        <br/>
+      <button form="creditCardForm" type="submit" className={styles.btn}>Pagar</button>
+        </div>
+      <div className={styles.cartContainer}>
+      {cartItems?.map((cartItem, index) => (
+        <CheckoutItem key={cartItem.id + index} cartItem ={cartItem} />
+        ))}
+        <span className={styles.total}>Total a pagar <span> {numberFormat(total)}</span> USD</span>
+        </div>
+    </div>
     </div>
   )
 }

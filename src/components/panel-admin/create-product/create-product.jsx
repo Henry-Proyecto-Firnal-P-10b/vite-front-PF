@@ -7,9 +7,9 @@ import { useForm } from 'react-hook-form';
 import styles from "../create-product/create-product.module.css";
 import { useDispatch, useSelector } from 'react-redux';
 import Button from '@mui/material/Button';
+import Swal from "sweetalert2";
 
 const CreateProduct = () => {
-
   
   const [urlImages, setUrlImages] = useState([]);
   const dispatch = useDispatch()
@@ -23,12 +23,7 @@ const CreateProduct = () => {
     price: 0,
     categories: [],
     imageUrl: [],
-    reviews: [{
-      date:'',
-      rating: 0,
-      review:'',
-      user:''
-    }],
+    reviews: [],
     rating: 0,
     sale: {},
     active: true
@@ -47,7 +42,7 @@ const CreateProduct = () => {
     })
     
   const {register, handleSubmit, formState:{ errors }} = productform;
-
+ 
   const handleChange =  (event) => {
     const property = event.target.name;
     const value = event.target.value;
@@ -55,13 +50,6 @@ const CreateProduct = () => {
         ...product,
         [property] : value
     })
-}
-
-const handleSelect =(event) => {
-  setProduct({
-      ...product,
-      categories: [event.target.value]
-  })
 }
 
  useEffect(() => {
@@ -72,6 +60,24 @@ const handleSelect =(event) => {
   getCat()
 }, [])
 
+const handleSelect =(event) => {
+  const selectedCategory = event.target.value;
+  if (!product.categories.includes(selectedCategory)) {
+    setProduct((prevProduct) => ({
+      ...prevProduct,
+      categories: [...prevProduct.categories, selectedCategory],
+    }));
+  }
+}
+const handleRemoveCategory = (categoryToRemove) => {
+
+  setProduct((prevProduct) => ({
+    ...prevProduct,
+    categories: prevProduct.categories.filter(
+      (category) => category !== categoryToRemove
+    ),
+  }));
+};
  
 useEffect(()=>{
   if(urlImages.length < 1) return;
@@ -82,23 +88,35 @@ useEffect(()=>{
 }, [urlImages])
 
 const onSubmit = async (e) => {
-  e.preventDefault();
-  const data = product
+  //e.preventDefault();
+  const data = {...product,
+          ...e}
+ 
+ 
   try{
-      await postProductsAdmin(data)
-        alert('Se agregó correctamente')
-  } catch(error){
-   alert('Upss algo falló','error:',error)
+    await postProductsAdmin(data)
+    Swal.fire({
+    icon: 'success',
+    title: 'Listo!',
+    text: 'Creaste el Producto Correctamente :)',
+    })
+    //para limpiar el formulario despues de crear el producto
+    productform.reset();
+} catch(error){
+  Swal.fire({
+    icon: 'error',
+    title: 'Oops...',
+    text: 'Ocurrio un error... intentalo nuevamente :(',
+    
+  })
   }
 }
 
 
   return (
     <div>      
-      
-        <Container maxWidth="lg" sx={{mt:"2rem"}}>
-
-            <form onSubmit={handleSubmit(onSubmit)} className={styles.center} noValidate>
+      <Container maxWidth="lg" sx={{mt:"2rem"}}>
+        <form onSubmit={handleSubmit(onSubmit)} className={styles.center} noValidate>
         <h1 className={styles.title}>AGREGAR PRODUCTO</h1>
           <div className={styles.contenedor}>
             <TextField
@@ -150,23 +168,25 @@ const onSubmit = async (e) => {
             error={!!errors.price}
             helperText={errors.price?.message}
           /> 
-            <TextField
-            label='Select'
-            select
-            defaultValue=''
-            name='category'
-            onChange={handleSelect}
-            {...register("categories", {required:'Seleccione una categoria'})}
-            error={!!errors.categories}
-            helperText={errors.categories?.message}
-            >
-                {
-                  dataCategories?.categories?.map((ele, index)=> (
-                    <MenuItem key={index} value={ele.categories}>
-                      {ele.categories}
-                    </MenuItem>
-                ))}
-            </TextField>
+          
+           <select name="category" onChange={handleSelect} className={styles.select}>
+           {dataCategories?.categories?.map((ele, index) => (
+            <option key={index} value={ele.categories}>
+           {ele.categories}
+           </option>
+           ))}
+          </select>
+          {/*mostrar y eliminar categorias seleccionadas */}
+          <label className={styles.categories}>
+          Categorías:{" "}
+          {product.categories?.map((category, index) => (
+           <span key={index}>{" | "}{category}
+           <button type="button"onClick={() => handleRemoveCategory(category)} className={styles.buton}>x</button>
+           </span>
+           ))}
+          </label>
+
+          {/* imagenes */}
             {product.imageUrl.length > 0 ? <ImageList sx={{ minHeight: '25vh'}} cols={3} rowHeight={164}>
                 {
                   product.imageUrl?.map((item, i)=>(
@@ -179,9 +199,10 @@ const onSubmit = async (e) => {
                 }
             </ImageList> : null }
             <Images setUrlImages={setUrlImages}/>
-            <Button type='submit' variant='contained' onClick={handleSubmit} fullWidth>Listo</Button>
-            </div>
+            <Button type='submit' variant='contained' onClick={()=>handleSubmit} fullWidth>Listo</Button>
+            </div>            
             </form>
+         
                 
         </Container>
       </div>

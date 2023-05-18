@@ -4,7 +4,10 @@ import {useState, useEffect} from 'react';
 //import firebase
 import {getProductByid, updateProduct } from '../../../utils/firebase/firebaseClient';
 //import material ui
-import { Grid, Typography, Stack, TextField, ImageList, Button, ImageListItem, MenuItem, Divider } from '@mui/material';
+import { Grid, Typography, Stack, TextField, ImageList, Button, ImageListItem, MenuItem, Divider, Box } from '@mui/material';
+import EditAttributesIcon from '@mui/icons-material/EditAttributes';
+import SpellcheckOutlinedIcon from '@mui/icons-material/SpellcheckOutlined';
+import BorderColorOutlinedIcon from '@mui/icons-material/BorderColorOutlined';
 import Images from  "../../images/images"
 
 
@@ -13,6 +16,15 @@ const EditProduct = ({id}) => {
 
   
  const [product, setProduct] = useState();
+ const [disabled, setDisabled] = useState({
+  name: true,
+  description: true,
+  stock: true,
+  price: true,
+  discount: true,
+  categories: true,
+  imageUrl: true
+ });
 
 useEffect(() => {
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -27,6 +39,14 @@ const getProduct = async (id) => {
     console.error(error);
   }
 }
+
+const handleDisabledChange = (field) => {
+  setDisabled(prevState => ({
+  ...prevState,
+  [field]: !prevState[field]
+  }));
+ }
+
 const handleChange =  (event) => {
   const property = event.target.name;
   const value = event.target.value;
@@ -62,34 +82,40 @@ return (
 <div>     
 <Grid
 container
-justifyContent='center'
-alignItems={'start'}
-sx={{ minHeight: '100vh' }}
+//justifyContent='center'
+//alignItems={'start'}
+//sx={{ minHeight: '100vh' }}
+ml={8}
 marginTop={3}
 > 
 <Grid justifyItems={"center"}>
   <Typography variant="h6" color="initial" align='center'>MODIFICAR PRODUCTO</Typography>
  
-<Divider/>
-<Grid  justifyContent={"center"} ml={8}>
-      <form onSubmit={handleSubmit} noValidate>
-      <h2>{product?.name}</h2>
-      <TextField 
-      label='Modificar Nombre...'
+<Divider sx={{mt:2, mb:2}}/>
+<Grid ml={8} width={"100%"}>
+<form onSubmit={handleSubmit} noValidate>
+ Nombre: 
+ <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '150%' }}>       
+ <TextField 
+      disabled={disabled.name}
       type='text'
-      // value={product?.name}
+      value={product?.name}
       onChange={handleChange}
       required
       name='name'
       margin='dense'
-      fullWidth
-     
-    />
-    <h5>{product?.description}</h5>
-      <TextField
-      label='Modificar Descripcion...'
+     fullWidth
+     />
+ <Button onClick={() =>  handleDisabledChange('name')}>
+ <BorderColorOutlinedIcon/></Button>
+ </Box>
+
+ Descripcion:
+ <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '150%' }}>
+    <TextField
+      disabled={disabled.description}
       type='text'
-      // value={product?.description}
+      value={product?.description}
       onChange={handleChange}
       required
       name='description'
@@ -102,24 +128,33 @@ marginTop={3}
       rows={3}
      
     />  
-      <h4>Stock Actual: {product?.stock} </h4>
-      <TextField
-      label='Modificar Stock...'
+    <Button onClick={() =>  handleDisabledChange('description')}
+    sx={{ flexShrink: 0 }}>
+      <BorderColorOutlinedIcon />
+    </Button>
+   </Box>
+    Stock: 
+    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '150%' }}>    
+    <TextField
+      disabled={disabled.stock}
       type='number'
-      // value={product?.stock}
+      value={product?.stock}
       onChange={handleChange}
       required
       name='stock'
-      margin='dense'
-      
-      fullWidth
+      margin='dense'      
+     fullWidth
       
     />  
-    <h4>${product?.price}</h4> 
-      <TextField
-      label='Modificar Precio...'
+      <Button onClick={() =>  handleDisabledChange('stock')} >
+      <BorderColorOutlinedIcon color="#283593"/></Button>
+      </Box>
+    Precio:
+    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '150%' }}>  
+     <TextField
+      disabled={disabled.price}
       type='number'
-      // value={product?.price}
+      value={product?.price}
       onChange={handleChange}
       required
       name='price'
@@ -127,6 +162,26 @@ marginTop={3}
       fullWidth
       
     /> 
+    <Button onClick={() =>  handleDisabledChange('price')}>
+    <BorderColorOutlinedIcon color="#283593"/></Button>
+    </Box>
+   Descuento:
+    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '150%' }}>  
+     <TextField
+      disabled={disabled.discount}
+      type='number'
+      value={product?.sale.discount} 
+      onChange={handleChange}
+      required
+      name='discount'
+      margin='dense'
+      fullWidth
+      
+    /> 
+    <Button onClick={() =>  handleDisabledChange('discount')}>
+    <BorderColorOutlinedIcon color="#283593"/></Button>
+    </Box>
+    
       {/* <TextField
       label='Select'
       select
@@ -154,7 +209,9 @@ marginTop={3}
           }
       </ImageList> : null }
       <Images setUrlImages={setUrlImages}/> */}
-      <Button type='submit' variant='contained' onClick={handleSubmit} fullWidth>Listo</Button>
+    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '150%', mt:3 }}>  
+    <Button type='submit' variant='contained' onClick={handleSubmit} fullWidth>Listo</Button>
+    </Box>
     
       </form>
     </Grid>       
@@ -168,4 +225,3 @@ marginTop={3}
 }
 
 export default EditProduct
-

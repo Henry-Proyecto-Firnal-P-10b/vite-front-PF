@@ -15,7 +15,7 @@ const CheckoutItem = ({ cartItem }) => {
       text: "No sera posible revertir esto!",
       icon: 'warning',
       showCancelButton: true,
-      cancelButtonText: "cancelar",
+      cancelButtonText: "Cancelar",
       confirmButtonColor: '#1ac8db',
       cancelButtonColor: '#d33',
       confirmButtonText: 'Si, Eliminalo!'
