@@ -111,7 +111,6 @@ var templateParams = {
     }
   };
 
-
   return (
     <div>
         <h2>Detalles del pago</h2>
