@@ -8,10 +8,8 @@ import CheckoutItem from "../../../components/payment-gateway/checkout-item/chec
 import { setCartTotal, updateInitialState } from '../../../features/cartSlice/cartSlice'
 import { useEffect, useState } from 'react';
 import Swal from "sweetalert2";
-import emailjs from '@emailjs/browser';
 import formatOnlinePurcase from "../../../helper/formatOnlinePurchase";
 import { ordersGlobal, updatePurchases } from "../../../utils/firebase/firebaseClient";
-
 
 const PaymentForm = () => {
 
@@ -25,56 +23,16 @@ const PaymentForm = () => {
     setTotal(newCartTotal);
     dispatch(setCartTotal(newCartTotal));
     dispatch(updateInitialState(cartItems))
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cartItems])
-  
+
   const stripe = useStripe();
   const elements = useElements();
   const navigate = useNavigate();
-  const currentUser = useSelector(state => state.persistedReducer.userData)
+  const currentUser = useSelector(state => state.persistedReducer.userData.userInf)
   const uid = useSelector(state => state.currentUser.userCredentials.uid);
-  //emailJs
-  const USER_ID="service_8duinll";
-  const API_KEY= "template_g954u96";
-  const TEMPLATE_ID= "lp4j5eTKXZNYsZ4jM";
-
-  var templateParams = {
-    email: currentUser.email,
-    name: currentUser.displayName,
-  };
-  
-  const sendEmail = (e) =>{
-      e.preventDefault()
-      emailjs.send(USER_ID, API_KEY, templateParams, TEMPLATE_ID).then((result) => {
-        console.log(result.text);
-      }, (error) => {
-        console.log(error.text)
-      });
-    };
-
 
   const onlinePurchase = formatOnlinePurcase(cartItems, total);
-
-//emailJs
-const USER_ID="service_8duinll";
-const API_KEY= "template_g954u96";
-const TEMPLATE_ID= "lp4j5eTKXZNYsZ4jM";
-
-var templateParams = {
-  email: currentUser.orderInf.email,
-  name: currentUser.orderInf.name,
-};
-
-
-  const sendEmail = (e) =>{
-    e.preventDefault()
-    emailjs.send(USER_ID, API_KEY, templateParams, TEMPLATE_ID).then((result) => {
-      console.log(result.text);
-    }, (error) => {
-      console.log(error.text)
-    });
-  };
-
 
   const paymentHandler = async (e) => {
     e.preventDefault();
@@ -102,29 +60,21 @@ var templateParams = {
 
     if (paymentResult.error) {
       Swal.fire({
-        title:'Ocurrió un error!',
+        title: 'Ocurrió un error!',
         text: paymentResult.error.message,
         icon: 'warning',
       })
     } else {
       if (paymentResult.paymentIntent.status === "succeeded") {
-        const updateDataUser = async () => {
-        if(!uid) return alert("no hay un usuario");              
+        if (!uid) return alert("no hay un usuario");
         Swal.fire({
-          title:'Pago exitoso!',
+          title: 'Pago exitoso!',
           icon: 'success',
           showCancelButton: true,
         })
-
-        sendEmail();
-        navigate("/");
-        await setDataUser("onlinePurchases", cartItems, uid );
-        updateDataUser();
-        sendEmail();
-        alert("Pago exitoso gracias por su compra!");
-        ordersGlobal(onlinePurchase[0],uid);
+        ordersGlobal(onlinePurchase[0], uid);
         updatePurchases(onlinePurchase, uid);
-        navigate("/");        
+        navigate("/");
         dispatch(clearCart());
 
       }
@@ -133,29 +83,29 @@ var templateParams = {
 
 
   return (
-    <div style={{marginTop:"80px"}}>
-        <h2>Detalles del pago</h2>
-    <div className={styles.PaymentFormContainer} >
-      <div className={styles.cardContainer}>
-      <div className={styles.paymentFormHeader}>
-      </div>
-      <form className={styles.FormContainer}  id="creditCardForm" >
-        <h4>Card</h4>
-        <div className={styles.creditCardContainer}>
-          <CardElement />
-        </div>
-      </form>
+    <div style={{ marginTop: "80px" }}>
+      <h2>Detalles del pago</h2>
+      <div className={styles.PaymentFormContainer} >
+        <div className={styles.cardContainer}>
+          <div className={styles.paymentFormHeader}>
+          </div>
+          <form className={styles.FormContainer} onSubmit={paymentHandler} id="creditCardForm" >
+            <h4>Card</h4>
+            <div className={styles.creditCardContainer}>
+              <CardElement />
+            </div>
+          </form>
 
-        <br/>
-      <button form="creditCardForm" type="submit" className={styles.btn} onClick={paymentHandler}>Pagar</button>
+          <br />
+          <button form="creditCardForm" type="submit" className={styles.btn}>Pagar</button>
         </div>
-      <div className={styles.cartContainer}>
-      {cartItems?.map((cartItem, index) => (
-        <CheckoutItem key={cartItem.id + index} cartItem ={cartItem} />
-        ))}
-        <span className={styles.total}>Total a pagar <span> {numberFormat(total)}</span> USD</span>
+        <div className={styles.cartContainer}>
+          {cartItems?.map((cartItem, index) => (
+            <CheckoutItem key={cartItem.id + index} cartItem={cartItem} />
+          ))}
+          <span className={styles.total}>Total a pagar <span> {numberFormat(total)}</span> USD</span>
         </div>
-    </div>
+      </div>
     </div>
   )
 }
