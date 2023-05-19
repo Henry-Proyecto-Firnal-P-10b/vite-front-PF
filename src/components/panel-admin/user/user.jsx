@@ -27,7 +27,7 @@ const User = () => {
         if (result.isConfirmed) {
           const f = async () => {
             await setDataUser(propiedad, contenido, data.uid);
-            dispatch(getUserData(await getUserByid(data.uid)));
+            getUserByid(data.uid, dat =>{dispatch(getUserData(dat.data()));})
           };
           f();
         }
@@ -45,7 +45,7 @@ const User = () => {
         if (result.isConfirmed) {
           const f = async () => {
             await setDataUser(propiedad, contenido, data.uid);
-            dispatch(getUserData(await getUserByid(data.uid)));
+            getUserByid(data.uid, dat =>{dispatch(getUserData(dat.data()));})
           };
           f();
         }
