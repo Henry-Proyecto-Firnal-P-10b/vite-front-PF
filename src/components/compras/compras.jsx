@@ -75,8 +75,7 @@ const Compras = () => {
               </Box>
             )}
           </Card>
-        )
-        }
+        )}
       </Stack>
     </div>
   )
