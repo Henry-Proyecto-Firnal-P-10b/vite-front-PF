@@ -32,7 +32,7 @@ import UserProfile from "./routes/userProfile/UserProfile";
 import ResetPass from "./routes/reset-password/reset-password";
 // import AboutUs from "./routes/AboutUs/AboutUs";
 import { ordersAction } from "./features/orders/orders";
-
+import Compras from "./components/compras/compras";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -92,6 +92,7 @@ const App = () => {
         <Route path="shop/*" element={<Shop />} />
         <Route path="detail/:id" element={<DetailProduct />} />
         <Route path="perfil" element={<UserProfile/>} />
+        <Route path="compras" element={<Compras/>} />
         <Route path ="/reset-password" element={<ResetPass/>}/>
         {/* <Route path="about-us" element={<AboutUs/>} /> */}
       </Route>
