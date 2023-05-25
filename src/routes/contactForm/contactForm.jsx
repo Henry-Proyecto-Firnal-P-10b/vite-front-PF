@@ -26,7 +26,6 @@ const ContactForm = () => {
             issue: issue,
             message: message
         }
-        console.log("params:", params)
         emailjs.sendForm(service, template, event.target, apiKey).then(
             (result)=> {
             if(result.text === 'OK'){
@@ -46,13 +45,6 @@ const ContactForm = () => {
             }
         )
     }
-    // .then(
-    //     Swal.fire({
-    //         title: 'Correo enviado!',
-    //         text: 'Pronto responderemos tu mensaje.',
-    //         icon: 'success',
-    //       })
-    // )
 
     return(
         <div>
