@@ -9,7 +9,7 @@ const HomeAdmin = () => {
   const { orders } = useSelector(state => state.orders)
   
   const currentDate = new Date();
-  const todaysDate = currentDate.getFullYear()+'/' +String(currentDate.getMonth()+1).padStart(2, '0')+'/'+currentDate.getDate();
+  const todaysDate = currentDate.getFullYear()+'/' +String(currentDate.getMonth()+1).padStart(2, '0')+'/'+String(currentDate.getDate()).padStart(2, '0');
 
   const formatDate = (dateString) => {
     const date = new Date(dateString);
@@ -19,7 +19,7 @@ const HomeAdmin = () => {
     const formattedDate = `${year}/${month}/${day}`;
     return formattedDate;
   };
-  
+  console.log(todaysDate);
 //Ordenes del dia
   const ordersDate = orders.map((order) => {
     const orderDate = order.date
@@ -28,7 +28,7 @@ const HomeAdmin = () => {
     const formattedDate = formatDate(fecha);
     return formattedDate
   })
-
+  console.log(ordersDate);
   //Precio y dia
   const datePrice = orders.map((order) => {
     const orderDate = order.date
